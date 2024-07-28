@@ -25,5 +25,8 @@ public class Orders {
     Double price;
     @Column(name="Delivery Address")
     String deliveryAddress;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
 }

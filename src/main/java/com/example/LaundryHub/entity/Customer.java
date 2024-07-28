@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -22,5 +24,6 @@ public class Customer {
     @Column(name = "Customer Cell Number")
     Integer number;
 
-
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Orders> orders;
 }
