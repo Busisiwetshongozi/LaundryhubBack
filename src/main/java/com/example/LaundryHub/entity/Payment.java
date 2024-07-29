@@ -16,4 +16,7 @@ public class Payment {
     Long id;
     Double amount;
     Date date;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Orders orders;
 }
