@@ -16,14 +16,15 @@ public class Orders {
     Long id ;
 
     @Column(name = "Customer Name")
-    String customerName;
+    String name;
     @Column(name = "Date of Order")
     Date date;
     @Column(name="Order Status")
     String status;
-    @Column(name="Price")
-    Double price;
     @Column(name="Delivery Address")
-    String deliveryAddress;
-
+    String address;
+    String email;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")  // Foreign key column in orders table
+    private Customer customer;
 }
