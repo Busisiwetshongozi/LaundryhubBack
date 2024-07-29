@@ -22,9 +22,15 @@ public class Orders {
     @Column(name="Order Status")
     String status;
     @Column(name="Delivery Address")
+
     String address;
     String email;
     @ManyToOne
     @JoinColumn(name = "customer_id")  // Foreign key column in orders table
     private Customer customer;
+
+
+
+
+
 }

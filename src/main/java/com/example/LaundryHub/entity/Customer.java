@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+
 import java.sql.Time;
 import java.util.Date;
+
+
 import java.util.List;
 
 @Entity
@@ -25,12 +28,8 @@ public class Customer {
     String address;
     @Column(name = "Customer Cell Number")
     Integer number;
-
     @OneToMany(mappedBy = "customer")
     private List<Orders> orders;
-
-
-
 
 
 }
