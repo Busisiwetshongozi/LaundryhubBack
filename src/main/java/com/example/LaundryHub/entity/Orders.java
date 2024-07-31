@@ -26,12 +26,13 @@ public class Orders {
     String address;
     String email;
     @ManyToOne
-    @JoinColumn(name = "customer_id")  // Foreign key column in orders table
+    @JoinColumn(name = "customer_id")
     private Customer customer;
-    @OneToOne(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private Services services;
+    @OneToOne
+    @JoinColumn(name = "payment_id")
     private Payment payment;
-
-
-
 
 }

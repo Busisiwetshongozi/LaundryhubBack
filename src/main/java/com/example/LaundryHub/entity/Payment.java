@@ -16,7 +16,6 @@ public class Payment {
     Long id;
     Double amount;
     Date date;
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Orders orders;
+    @OneToOne(mappedBy = "payment")  // Inverse side of the relationship
+    private Orders order;
 }

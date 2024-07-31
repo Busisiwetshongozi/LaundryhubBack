@@ -1,6 +1,8 @@
 package com.example.LaundryHub.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +18,7 @@ import java.util.List;
 @Setter
 @Table(name = "Customers")
 
-public class Customer {
+public class Customer  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -28,8 +30,10 @@ public class Customer {
     String address;
     @Column(name = "Customer Cell Number")
     Integer number;
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer")  // Define the relationship
     private List<Orders> orders;
+
+
 
 
 }
