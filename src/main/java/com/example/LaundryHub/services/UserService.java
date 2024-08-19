@@ -21,4 +21,12 @@ public class UserService {
 
         return users;
     }
+
+
+
+    // Method to find user by username
+    public User findByEmail(String email) {
+        return userRepo.findByEmail( email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }

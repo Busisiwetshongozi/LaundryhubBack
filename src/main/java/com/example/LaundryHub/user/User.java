@@ -1,6 +1,8 @@
 package com.example.LaundryHub.user;
 
+import com.example.LaundryHub.entity.Orders;
 import com.example.LaundryHub.enums.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -28,6 +30,9 @@ public class User implements UserDetails {
     String email;
     @NotBlank
     String password;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Orders> orders;
 
     @Enumerated(EnumType.STRING)
     private Role role;

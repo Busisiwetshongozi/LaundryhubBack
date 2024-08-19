@@ -1,13 +1,14 @@
 package com.example.LaundryHub.services;
 
-import com.example.LaundryHub.entity.Customer;
 import com.example.LaundryHub.entity.Orders;
 import com.example.LaundryHub.entity.Services;
-import com.example.LaundryHub.repository.CustomerRepo;
 import com.example.LaundryHub.repository.OrdersRepo;
 import com.example.LaundryHub.repository.ServicesRepo;
-import jakarta.persistence.criteria.Order;
+import com.example.LaundryHub.repository.UserRepo;
+import com.example.LaundryHub.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,48 +17,46 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrdersService {
     private final OrdersRepo ordersRepo;
-    private final CustomerRepo customerRepo;
+    private final UserRepo userRepo;
     private final ServicesRepo servicesRepo;
 
-    public Orders createOrder(Orders orders){
-        return ordersRepo.save(orders);
-    }
 
-    // Create an order for a specific customer
-    public Orders createOrderForCustomer(Long customerId, Orders order) {
-        Customer customer = customerRepo.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+    public Orders createOrder(Orders order) {
+        // Get the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();  // The username should be the email
 
-        // Associate the customer with the order
-        order.setCustomer(customer);
+        // Fetch the user object from the user repository using the email (username)
+        User user = userRepo.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Save the order
+        // Associate the user with the order
+        order.setUser(user);
+
+        // Associate each service with the order
+        if (order.getServices() != null) {
+            for (Services service : order.getServices()) {
+                // Set the current order to each service
+                service.setOrders(order);
+            }
+        }
+
+        // Save the order (which will also save associated services and payment due to cascade settings)
         Orders newOrder = ordersRepo.save(order);
-
-        // Associate services with the order
-        //if (order.getServices() != null) {
-            //for (Services service : order.getServices()) {
-                // Optional: Check if the service exists
-                //if (servicesRepo.existsById(service.getId())) {
-                    //service.getOrders().add(newOrder);
-                    //servicesRepo.save(service);
-                //}
-           // }
-        //}
 
         return newOrder;
     }
-    public List<Orders> getOrdersByCustomerId(Long customerId) {
-        return ordersRepo.findByCustomerId(customerId);
-    }
 
-    public Orders getOrder(Long id){
-        return ordersRepo.findById(id).orElse(null);
-    }
+    public List<Orders> getUserOrders() {
+        // Get the username from the security context
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    public List<Orders>getAllOrders(){
-        return ordersRepo.findAll();
+        // Fetch the user by username (email)
+        User user = userRepo.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Get the list of orders for the user
+        return ordersRepo.findByUser(user);
     }
 
 }

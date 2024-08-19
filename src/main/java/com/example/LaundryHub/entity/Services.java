@@ -17,10 +17,10 @@ public class Services {
     String name;
     String Description;
     double price;
-    @ManyToMany(mappedBy = "services")  // Inverse side of the relationship
-    private List<Orders> orders;
+
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "order_id") // Foreign key in Services table
+    private Orders orders;
+
 
 }
