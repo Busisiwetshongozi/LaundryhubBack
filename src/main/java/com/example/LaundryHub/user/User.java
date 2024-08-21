@@ -2,6 +2,7 @@ package com.example.LaundryHub.user;
 
 import com.example.LaundryHub.entity.Orders;
 import com.example.LaundryHub.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -32,6 +33,7 @@ public class User implements UserDetails {
     String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @JsonIgnore
     private List<Orders> orders;
 
     @Enumerated(EnumType.STRING)
@@ -51,6 +53,10 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
+
+
+
+
 
     @Override
     public boolean isAccountNonExpired() {

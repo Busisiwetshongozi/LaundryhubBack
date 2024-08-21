@@ -58,5 +58,7 @@ public class OrdersService {
         // Get the list of orders for the user
         return ordersRepo.findByUser(user);
     }
-
+public  void deleteOrders( Long id){
+       this.ordersRepo.deleteById(id);
+}
 }

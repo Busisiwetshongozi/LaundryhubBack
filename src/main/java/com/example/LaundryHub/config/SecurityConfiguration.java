@@ -38,8 +38,10 @@ public class SecurityConfiguration {
                                 "/api/services/all",
                                 "api/services/**",
                                 "api/payments/add/**",
-                                "api/orders/user**",
-                                "api/orders/add"
+                                "api/orders/user/**",
+                                "api/orders/add",
+                                "users/user/**",
+                                "api/orders/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -64,4 +64,10 @@ public class OrdersController {
     return ResponseEntity.ok().body(allOrders);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteOrders(@PathVariable Long id){
+        this.ordersService.deleteOrders(id);
+
+    }
+
 }
