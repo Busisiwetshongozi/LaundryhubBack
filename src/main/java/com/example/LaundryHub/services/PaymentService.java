@@ -22,54 +22,76 @@ public class PaymentService {
     private  final OrdersRepo ordersRepo;
     private final UserRepo userRepo;
 
-    public Payment createPayment(Payment payment, Long orderId) {
+    //public Payment createPayment(Payment payment, Long orderId) {
         // Get the currently authenticated user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();  // The username should be the email
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //String username = authentication.getName();  // The username should be the email
 
         // Fetch the user object from the user repository using the email (username)
-        User user = userRepo.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        //User user = userRepo.findByEmail(username)
+               // .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Fetch the order object from the order repository
-        Orders order = ordersRepo.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+        //Orders order = ordersRepo.findById(orderId)
+                //.orElseThrow(() -> new RuntimeException("Order not found"));
 
         // Validate that the order belongs to the user
-        if (!order.getUser().equals(user)) {
-            throw new RuntimeException("Order does not belong to the user");
-        }
+       // if (!order.getUser().equals(user)) {
+            //throw new RuntimeException("Order does not belong to the user");
+
 
         // Set the order for the payment
-        payment.setOrder(order);
+        //payment.setOrder(order);
 
         // Save the payment
-        return paymentRepo.save(payment);
-    }
+        //return paymentRepo.save(payment);
+    //}
+        public Payment createPaymentForOrder(Payment payment) {
+            // Get the currently authenticated user
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = auth.getName();
 
-    public Payment createPaymentForOrder(Payment payment) {
-        // Get the currently authenticated user
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
+            // Fetch the user from the database
+            User user = userRepo.findByEmail(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Fetch the user from the database
-        User user = userRepo.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            // Fetch the most recent order for the user
+            Orders latestOrder = ordersRepo.findTopByUserOrderByDateDesc(user)
+                    .orElseThrow(() -> new RuntimeException("No orders found for the user"));
 
-        // Fetch the most recent order for the user
-        Orders latestOrder = ordersRepo.findTopByUserOrderByDateDesc(user)
-                .orElseThrow(() -> new RuntimeException("No orders found for the user"));
+            // Set the user on the payment (optional, based on your schema design)
+            payment.setUser(user);
 
-        // Set the order on the payment
-        payment.setOrder(latestOrder);
+            // Set the order on the payment
+            payment.setOrder(latestOrder);
 
-        // Save the payment
-        return paymentRepo.save(payment);
-    }
+            // Save the payment
+            Payment savedPayment = paymentRepo.save(payment);
+
+            // Optionally, update the order to reflect the new payment
+            latestOrder.setPayment(savedPayment);
+            ordersRepo.save(latestOrder);
+
+            return savedPayment;
+        }
+
 
 
     public List<Payment> getAllPayments(){
         return paymentRepo.findAll();
 
     }
+
+    public List<Payment> getUserPayments() {
+        // Get the username from the security context
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Fetch the user by username (email)
+        User user = userRepo.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Get the list of orders for the user
+        return paymentRepo.findByOrderUser(user);
+    }
+
 }

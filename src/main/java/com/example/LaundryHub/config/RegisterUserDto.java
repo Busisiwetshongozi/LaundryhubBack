@@ -18,4 +18,8 @@ public class RegisterUserDto {
 
     private Role role;
 
+    private String address;
+
+    private Integer number;
+
 }

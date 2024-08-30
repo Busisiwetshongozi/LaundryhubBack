@@ -30,6 +30,9 @@ public class AuthenticationService {
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setRole(input.getRole());
+        user.setAddress(input.getAddress());
+        user.setNumber(input.getNumber());
+
 
         return userRepo.save(user);
     }

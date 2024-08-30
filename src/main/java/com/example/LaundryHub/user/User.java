@@ -1,6 +1,7 @@
 package com.example.LaundryHub.user;
 
 import com.example.LaundryHub.entity.Orders;
+import com.example.LaundryHub.entity.Payment;
 import com.example.LaundryHub.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -35,6 +36,9 @@ public class User implements UserDetails {
     @JsonManagedReference
     @JsonIgnore
     private List<Orders> orders;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Payment> payments;
 
     @Enumerated(EnumType.STRING)
     private Role role;

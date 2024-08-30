@@ -1,5 +1,6 @@
 package com.example.LaundryHub.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,8 @@ public class Services {
     double price;
 
     @ManyToOne
-    @JoinColumn(name = "order_id") // Foreign key in Services table
+    @JoinColumn(name = "order_id")
+    @JsonBackReference
     private Orders orders;
 
 
